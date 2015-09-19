@@ -42,4 +42,43 @@ class ErrorSpec extends Specification {
         error.details == ERROR
     }
 
+    def 'two errors with the same values should be equal'() {
+        when:
+        def firstError = new Error(ALICE, ERROR)
+        def secondError = new Error(ALICE, ERROR)
+
+        then:
+        firstError == secondError
+    }
+
+    def 'two errors with different values should not be equal'() {
+        when:
+        def firstError = new Error(ALICE, ERROR)
+        def secondError = new Error('alice', ERROR)
+        def thirdError = new Error(ALICE, 'error')
+
+        then:
+        firstError != secondError
+        firstError != thirdError
+        secondError != thirdError
+    }
+
+    def 'two errors with the same values should have the same hash code'() {
+        when:
+        def firstError = new Error(ALICE, ERROR)
+        def secondError = new Error(ALICE, ERROR)
+
+        then:
+        firstError.hashCode() == secondError.hashCode()
+    }
+
+    def 'two errors with different values should different hash codes'() {
+        when:
+        def firstError = new Error(ALICE, ERROR)
+        def secondError = new Error('alice', ERROR)
+
+        then:
+        firstError.hashCode() != secondError.hashCode()
+    }
+
 }

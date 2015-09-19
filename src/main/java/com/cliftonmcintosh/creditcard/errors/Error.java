@@ -25,4 +25,20 @@ public class Error {
     public String getDetails() {
         return details;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Error)) return false;
+
+        Error error = (Error) o;
+
+        return name.equals(error.name) && details.equals(error.details);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return 31 * name.hashCode() + (details.hashCode());
+    }
 }
