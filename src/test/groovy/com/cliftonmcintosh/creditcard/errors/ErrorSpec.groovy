@@ -49,6 +49,7 @@ class ErrorSpec extends Specification {
 
         then:
         firstError == secondError
+        firstError == firstError
     }
 
     def 'two errors with different values should not be equal'() {
