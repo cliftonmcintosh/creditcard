@@ -27,9 +27,9 @@ class MessageSpec extends Specification {
         null   | ONE_THOUSAND
         ''     | ONE_THOUSAND
         ' '    | ONE_THOUSAND
-        BOB | null
-        BOB | ''
-        BOB | ' '
+        BOB    | null
+        BOB    | ''
+        BOB    | ' '
     }
 
     def 'the message should be initialized using the constructor parameters'() {
