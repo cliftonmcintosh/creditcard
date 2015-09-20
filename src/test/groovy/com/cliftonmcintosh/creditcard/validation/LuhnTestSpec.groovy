@@ -34,6 +34,8 @@ class LuhnTestSpec extends Specification {
         '4111111111111111'     | true
         '5454545454545454'     | true
         '12345678912345678918' | true
+        '0'                    | true
+        '00000000000'          | true
     }
 
 }

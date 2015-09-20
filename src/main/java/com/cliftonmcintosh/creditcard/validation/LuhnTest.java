@@ -24,13 +24,6 @@ public enum LuhnTest {
     }
 
     private int summedDigits(int toSum) {
-        final int summed;
-        if (toSum < 10) {
-            summed = toSum;
-        } else {
-            String digits = Integer.toString(toSum);
-            summed = Character.getNumericValue(digits.charAt(0)) + Character.getNumericValue(digits.charAt(1));
-        }
-        return summed;
+        return toSum < 10 ? toSum : 1 + (toSum - 10);
     }
 }
