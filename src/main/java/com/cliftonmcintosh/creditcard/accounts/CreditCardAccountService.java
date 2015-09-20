@@ -31,13 +31,14 @@ public class CreditCardAccountService implements AccountService {
 
     @Override
     public void createAccount(String name, String accountNumber, String limit) {
-        if (validationService.validateAccountCreationRequest(name, accountNumber, limit)) {
-            Account newAccount = new Account(name, accountNumber, createLimitFromInput(limit));
-            if (accounts.stream().noneMatch(account -> account.getName().equals(newAccount.getName()))) {
+        if (accounts.stream().noneMatch(account -> account.getName().equals(name))) {
+            if (validationService.validateAccountCreationRequest(name, accountNumber, limit)) {
+                Account newAccount = new Account(name, accountNumber, createLimitFromInput(limit));
                 accounts.add(newAccount);
+                errorService.removeErrorForName(name);
+            } else {
+                errorService.saveError(new AccountError(name, ERROR_DETAILS));
             }
-        } else {
-            errorService.saveError(new AccountError(name, ERROR_DETAILS));
         }
     }
 

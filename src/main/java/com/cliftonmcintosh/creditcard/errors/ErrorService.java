@@ -9,5 +9,7 @@ public interface ErrorService {
 
     public void saveError(AccountError error);
 
+    public void removeErrorForName(String name);
+
     public Set<AccountError> getErrors();
 }
