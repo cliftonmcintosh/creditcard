@@ -90,4 +90,39 @@ class AccountSpec extends Specification {
         firstAccount.hashCode() != secondAccount.hashCode()
     }
 
+    def 'credit should decrease the balance as long as the credit amount is positive'() {
+        given:
+        def account = new Account(ALICE, ACCOUNT_NUMBER, 1)
+
+        when:
+        account.credit(amountToCredit)
+
+        then:
+        account.balance == expectedBalance
+
+        where:
+        amountToCredit | expectedBalance
+        1              | -1
+        0              | 0
+        -1             | 0
+    }
+
+    def 'charge should increase the balance as long as the credit amount is positive and the limit has not yet been reached'() {
+        given:
+        def account = new Account(ALICE, ACCOUNT_NUMBER, 1)
+
+        when:
+        account.charge(amountToCharge)
+
+        then:
+        account.balance == expectedBalance
+
+        where:
+        amountToCharge | expectedBalance
+        1              | 1
+        0              | 0
+        -1             | 0
+        2              | 0
+    }
+
 }

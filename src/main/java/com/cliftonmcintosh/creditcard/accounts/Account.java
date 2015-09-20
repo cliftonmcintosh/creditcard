@@ -45,12 +45,24 @@ public class Account {
         this.balance = balance;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Account)) return false;
+    public void charge(int charge) {
+        if (charge > 0) {
+            balance = (balance + charge) <= limit ? (balance + charge) : balance;
+        }
+    }
 
-        Account account = (Account) o;
+    public void credit(int credit) {
+        if (credit > 0) {
+            balance -= credit;
+        }
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (this == other) return true;
+        if (!(other instanceof Account)) return false;
+
+        Account account = (Account) other;
         return name.equals(account.name);
     }
 

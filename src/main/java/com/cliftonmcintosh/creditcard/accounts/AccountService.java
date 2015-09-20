@@ -9,5 +9,9 @@ public interface AccountService {
 
     void createAccount(String name, String accountNumber, String limit);
 
+    void chargeAccount(String accountName, String amount);
+
+    void creditAccount(String accountName, String amount);
+
     Set<Account> getAccounts();
 }

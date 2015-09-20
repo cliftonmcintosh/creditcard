@@ -59,7 +59,7 @@ class CreditCardAccountServiceSpec extends Specification {
         then:
         1 * validationService.validateAccountCreationRequest(name, accountNumber, limit) >> false
         1 * errorService.saveError(_)
-        service.getAccounts().size() == 0
+        service.accounts.size() == 0
     }
 
     def 'createAccount should not create an error if the data is invalid but an account with the same name already exists'() {
@@ -77,7 +77,7 @@ class CreditCardAccountServiceSpec extends Specification {
         1 * validationService.validateAccountCreationRequest(name, validAccountNumber, limit) >> true
         0 * validationService.validateAccountCreationRequest(name, invalidAccountNumber, limit)
         0 * errorService.saveError(_)
-        service.getAccounts().size() == 1
+        service.accounts.size() == 1
     }
 
     def 'createAccount should save an account if the data is valid'() {
@@ -92,7 +92,7 @@ class CreditCardAccountServiceSpec extends Specification {
         then:
         1 * validationService.validateAccountCreationRequest(name, accountNumber, limit) >> true
         0 * errorService.saveError(_)
-        service.getAccounts().size() == 1
+        service.accounts.size() == 1
     }
 
     def 'createAccount should request that any existing error be removed when an account is successfully created'() {
@@ -123,11 +123,59 @@ class CreditCardAccountServiceSpec extends Specification {
         then:
         1 * validationService.validateAccountCreationRequest(name, _, limit) >> true
         0 * errorService.saveError(_)
-        Set allAccounts = service.getAccounts()
+        Set allAccounts = service.accounts
         allAccounts.size() == 1
         allAccounts.findAll { it.name == name }.size() == 1
         allAccounts.findAll { it.accountNumber == firstAccountNumber }.size() == 1
         allAccounts.findAll { it.accountNumber == secondAccountNumber }.size() == 0
+    }
+
+    @Unroll
+    def 'credit should decrease the balance of an account when  the data is valid'() {
+        given:
+        def name = NAME
+        def accountNumber = ACCOUNT_NUMBER
+        def limit = ONE_DOLLAR
+        validationService.validateAccountCreationRequest(name, accountNumber, limit) >> true
+        service.createAccount(name, accountNumber, limit)
+
+        when:
+        service.creditAccount(NAME, creditAmount)
+
+        then:
+        1 * validationService.validateAccountCreditRequest(name, creditAmount) >> passesValidation
+        service.accounts.size() == 1
+        service.accounts[0].balance == expectedBalance
+
+        where:
+        creditAmount | passesValidation | expectedBalance
+        ONE_DOLLAR   | true             | -1
+        ONE_DOLLAR   | false            | 0
+        '$0'         | true             | 0
+    }
+
+    @Unroll
+    def 'charge should increase the balance of an account when the data is valid'() {
+        given:
+        def name = NAME
+        def accountNumber = ACCOUNT_NUMBER
+        def limit = ONE_DOLLAR
+        validationService.validateAccountCreationRequest(name, accountNumber, limit) >> true
+        service.createAccount(name, accountNumber, limit)
+
+        when:
+        service.chargeAccount(NAME, chargeAmount)
+
+        then:
+        1 * validationService.validateAccountCreditRequest(name, chargeAmount) >> passesValidation
+        service.accounts.size() == 1
+        service.accounts[0].balance == expectedBalance
+
+        where:
+        chargeAmount | passesValidation | expectedBalance
+        ONE_DOLLAR   | true             | 1
+        ONE_DOLLAR   | false            | 0
+        '$0'         | true             | 0
     }
 
 }

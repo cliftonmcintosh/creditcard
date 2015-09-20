@@ -37,4 +37,38 @@ class CreditCardAccountValidationServiceSpec extends Specification {
         'Mike' | '4111111111111111'     | null    | false
     }
 
+    @Unroll
+    def 'validateAccountChargeRequest should return true when the name exists and the amount is correctly formatted'() {
+        when:
+        def isValid = service.validateAccountChargeRequest(name, charge)
+
+        then:
+        isValid == expected
+
+        where:
+        name | charge | expected
+        'A'  | '$1'   | true
+        null | '$1'   | false
+        ''   | '$1'   | false
+        ' '  | '$1'   | false
+        'A'  | '$A'   | false
+    }
+
+    @Unroll
+    def 'validateAccountCreditRequest should return true when the name exists and the amount is correctly formatted'() {
+        when:
+        def isValid = service.validateAccountCreditRequest(name, credit)
+
+        then:
+        isValid == expected
+
+        where:
+        name | credit | expected
+        'A'  | '$1'   | true
+        null | '$1'   | false
+        ''   | '$1'   | false
+        ' '  | '$1'   | false
+        'A'  | '$A'   | false
+    }
+
 }

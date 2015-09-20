@@ -27,11 +27,11 @@ public class AccountError {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof AccountError)) return false;
+    public boolean equals(Object other) {
+        if (this == other) return true;
+        if (!(other instanceof AccountError)) return false;
 
-        AccountError error = (AccountError) o;
+        AccountError error = (AccountError) other;
         return name.equals(error.name);
 
     }

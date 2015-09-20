@@ -7,7 +7,7 @@ public interface AccountValidationService {
 
     boolean validateAccountCreationRequest(String name, String accountNumber, String limit);
 
-    boolean validateAccountChargeRequest(String name, int charge);
+    boolean validateAccountChargeRequest(String name, String charge);
 
-    boolean validateAccountCreditRequest(String name, int credit);
+    boolean validateAccountCreditRequest(String name, String credit);
 }
