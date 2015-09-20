@@ -44,4 +44,18 @@ public class Account {
     public void setBalance(int balance) {
         this.balance = balance;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Account)) return false;
+
+        Account account = (Account) o;
+        return name.equals(account.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return 31 * name.hashCode();
+    }
 }

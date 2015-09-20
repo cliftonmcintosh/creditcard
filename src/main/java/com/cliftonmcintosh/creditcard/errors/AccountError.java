@@ -32,13 +32,12 @@ public class AccountError {
         if (!(o instanceof AccountError)) return false;
 
         AccountError error = (AccountError) o;
-
-        return name.equals(error.name) && details.equals(error.details);
+        return name.equals(error.name);
 
     }
 
     @Override
     public int hashCode() {
-        return 31 * name.hashCode() + (details.hashCode());
+        return 31 * name.hashCode();
     }
 }

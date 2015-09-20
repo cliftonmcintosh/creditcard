@@ -42,38 +42,35 @@ class AccountErrorSpec extends Specification {
         error.details == ERROR
     }
 
-    def 'two errors with the same values should be equal'() {
+    def 'two errors with the same name should be equal'() {
         when:
         def firstError = new AccountError(ALICE, ERROR)
-        def secondError = new AccountError(ALICE, ERROR)
+        def secondError = new AccountError(ALICE, 'error')
 
         then:
         firstError == secondError
         firstError == firstError
     }
 
-    def 'two errors with different values should not be equal'() {
+    def 'two errors with different names should not be equal'() {
         when:
         def firstError = new AccountError(ALICE, ERROR)
         def secondError = new AccountError('alice', ERROR)
-        def thirdError = new AccountError(ALICE, 'error')
 
         then:
         firstError != secondError
-        firstError != thirdError
-        secondError != thirdError
     }
 
-    def 'two errors with the same values should have the same hash code'() {
+    def 'two errors with the same names should have the same hash code'() {
         when:
         def firstError = new AccountError(ALICE, ERROR)
-        def secondError = new AccountError(ALICE, ERROR)
+        def secondError = new AccountError(ALICE, 'error')
 
         then:
         firstError.hashCode() == secondError.hashCode()
     }
 
-    def 'two errors with different values should different hash codes'() {
+    def 'two errors with different names should different hash codes'() {
         when:
         def firstError = new AccountError(ALICE, ERROR)
         def secondError = new AccountError('alice', ERROR)

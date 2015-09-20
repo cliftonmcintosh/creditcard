@@ -15,6 +15,8 @@ class AccountSpec extends Specification {
 
     private static ACCOUNT_NUMBER = '4111111111111111'
 
+    private static ANOTHER_ACCOUNT_NUMBER = '79927398713'
+
     @Unroll
     def 'the constructor should not allow a null or empty name or account number nor a limit less than zero'() {
         when:
@@ -49,6 +51,43 @@ class AccountSpec extends Specification {
 
         then:
         account.balance == 0
+    }
+
+    def 'two accounts with the same name should be equal'() {
+        when:
+        def firstAccount = new Account(ALICE, ACCOUNT_NUMBER, 1)
+        def secondAccount = new Account(ALICE, ANOTHER_ACCOUNT_NUMBER, 1)
+
+        then:
+        firstAccount == secondAccount
+        firstAccount == firstAccount
+    }
+
+    def 'two accounts with different names should not be equal'() {
+        when:
+        def firstAccount = new Account(ALICE, ACCOUNT_NUMBER, 1)
+        def secondAccount = new Account('alice', ACCOUNT_NUMBER, 1)
+
+        then:
+        firstAccount != secondAccount
+    }
+
+    def 'two accounts with the same names should have the same hash code'() {
+        when:
+        def firstAccount = new Account(ALICE, ACCOUNT_NUMBER, 1)
+        def secondAccount = new Account(ALICE, ANOTHER_ACCOUNT_NUMBER, 1)
+
+        then:
+        firstAccount.hashCode() == secondAccount.hashCode()
+    }
+
+    def 'two accounts with different names should different hash codes'() {
+        when:
+        def firstAccount = new Account(ALICE, ACCOUNT_NUMBER, 1)
+        def secondAccount = new Account('alice', ACCOUNT_NUMBER, 1)
+
+        then:
+        firstAccount.hashCode() != secondAccount.hashCode()
     }
 
 }
