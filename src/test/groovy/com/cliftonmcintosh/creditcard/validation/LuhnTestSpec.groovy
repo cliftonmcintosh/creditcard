@@ -20,6 +20,7 @@ class LuhnTestSpec extends Specification {
 
         where:
         input                  | expected
+        '1'                    | false
         '79927398710'          | false
         '79927398711'          | false
         '79927398712'          | false

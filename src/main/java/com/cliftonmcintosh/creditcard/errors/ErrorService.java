@@ -7,7 +7,7 @@ import java.util.Set;
  */
 public interface ErrorService {
 
-    public void saveError(Error error);
+    public void saveError(AccountError error);
 
-    public Set<Error> getErrors();
+    public Set<AccountError> getErrors();
 }

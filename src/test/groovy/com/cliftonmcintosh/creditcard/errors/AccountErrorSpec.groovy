@@ -9,7 +9,7 @@ import spock.lang.Unroll
  *
  * Created by cmcintosh on 9/19/15.
  */
-class ErrorSpec extends Specification {
+class AccountErrorSpec extends Specification {
 
 
     private static final ALICE = 'Alice'
@@ -18,7 +18,7 @@ class ErrorSpec extends Specification {
     @Unroll
     def 'the constructor should not allow null or empty parameters'() {
         when:
-        new Error(name, error);
+        new AccountError(name, error);
 
         then:
         thrown(IllegalArgumentException)
@@ -35,7 +35,7 @@ class ErrorSpec extends Specification {
 
     def 'the error should be initialized with the constructor parameters'() {
         when:
-        def error = new Error(ALICE, ERROR)
+        def error = new AccountError(ALICE, ERROR)
 
         then:
         error.name == ALICE
@@ -44,8 +44,8 @@ class ErrorSpec extends Specification {
 
     def 'two errors with the same values should be equal'() {
         when:
-        def firstError = new Error(ALICE, ERROR)
-        def secondError = new Error(ALICE, ERROR)
+        def firstError = new AccountError(ALICE, ERROR)
+        def secondError = new AccountError(ALICE, ERROR)
 
         then:
         firstError == secondError
@@ -54,9 +54,9 @@ class ErrorSpec extends Specification {
 
     def 'two errors with different values should not be equal'() {
         when:
-        def firstError = new Error(ALICE, ERROR)
-        def secondError = new Error('alice', ERROR)
-        def thirdError = new Error(ALICE, 'error')
+        def firstError = new AccountError(ALICE, ERROR)
+        def secondError = new AccountError('alice', ERROR)
+        def thirdError = new AccountError(ALICE, 'error')
 
         then:
         firstError != secondError
@@ -66,8 +66,8 @@ class ErrorSpec extends Specification {
 
     def 'two errors with the same values should have the same hash code'() {
         when:
-        def firstError = new Error(ALICE, ERROR)
-        def secondError = new Error(ALICE, ERROR)
+        def firstError = new AccountError(ALICE, ERROR)
+        def secondError = new AccountError(ALICE, ERROR)
 
         then:
         firstError.hashCode() == secondError.hashCode()
@@ -75,8 +75,8 @@ class ErrorSpec extends Specification {
 
     def 'two errors with different values should different hash codes'() {
         when:
-        def firstError = new Error(ALICE, ERROR)
-        def secondError = new Error('alice', ERROR)
+        def firstError = new AccountError(ALICE, ERROR)
+        def secondError = new AccountError('alice', ERROR)
 
         then:
         firstError.hashCode() != secondError.hashCode()

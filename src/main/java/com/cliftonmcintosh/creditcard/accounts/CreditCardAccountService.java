@@ -1,7 +1,7 @@
 package com.cliftonmcintosh.creditcard.accounts;
 
-import com.cliftonmcintosh.creditcard.errors.*;
-import com.cliftonmcintosh.creditcard.errors.Error;
+import com.cliftonmcintosh.creditcard.errors.AccountError;
+import com.cliftonmcintosh.creditcard.errors.ErrorService;
 import com.cliftonmcintosh.creditcard.validation.AccountValidationService;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableSet;
@@ -14,7 +14,7 @@ import java.util.Set;
  */
 public class CreditCardAccountService implements AccountService {
 
-    private static final String ERROR_DETAILS = "Error";
+    private static final String ERROR_DETAILS = "error";
 
     private final AccountValidationService validationService;
 
@@ -37,7 +37,7 @@ public class CreditCardAccountService implements AccountService {
                 accounts.add(newAccount);
             }
         } else {
-            errorService.saveError(new Error(name, ERROR_DETAILS));
+            errorService.saveError(new AccountError(name, ERROR_DETAILS));
         }
     }
 

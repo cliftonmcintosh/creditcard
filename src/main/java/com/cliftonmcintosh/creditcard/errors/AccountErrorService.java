@@ -10,21 +10,21 @@ import java.util.Set;
  */
 public class AccountErrorService implements ErrorService {
 
-    private final Set<Error> errors;
+    private final Set<AccountError> errors;
 
     public AccountErrorService() {
         errors = new HashSet<>();
     }
 
     @Override
-    public void saveError(Error error) {
+    public void saveError(AccountError error) {
         if (!errors.contains(error)) {
             errors.add(error);
         }
     }
 
     @Override
-    public Set<Error> getErrors() {
+    public Set<AccountError> getErrors() {
         return ImmutableSet.copyOf(errors);
     }
 }

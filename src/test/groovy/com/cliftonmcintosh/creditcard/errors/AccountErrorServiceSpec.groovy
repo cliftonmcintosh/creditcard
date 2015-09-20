@@ -16,8 +16,8 @@ class AccountErrorServiceSpec extends Specification {
 
     def 'saveError should add an error to the errors that are saved'() {
         given:
-        def firstError = new Error('Ellen', 'invalid account number')
-        def secondError = new Error('Dave', 'invalid account number')
+        def firstError = new AccountError('Ellen', 'invalid account number')
+        def secondError = new AccountError('Dave', 'invalid account number')
 
         when:
         service.saveError(firstError)
@@ -33,8 +33,8 @@ class AccountErrorServiceSpec extends Specification {
 
     def 'saveError should not add a duplicate error to the errors that are saved'() {
         given:
-        def firstError = new Error('Ellen', 'invalid account number')
-        def secondError = new Error('Ellen', 'invalid account number')
+        def firstError = new AccountError('Ellen', 'invalid account number')
+        def secondError = new AccountError('Ellen', 'invalid account number')
 
         when:
         service.saveError(firstError)
