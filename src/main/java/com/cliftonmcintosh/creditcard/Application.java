@@ -49,6 +49,8 @@ public class Application {
         this.errorService = Preconditions.checkNotNull(errorService, "The error service cannot be null");
         commandConsumerMap = new HashMap<>();
         commandConsumerMap.put("Add", buildAddConsumerCommand());
+        commandConsumerMap.put("Credit", buildCreditCommand());
+        commandConsumerMap.put("Charge", buildChargeCommand());
     }
 
     public void run(String batchFileName) {
@@ -80,7 +82,7 @@ public class Application {
     private void processCommand(String input) {
         List<String> tokenizedInput = Lists.newArrayList(inputProcessor.processRawInput(input));
         tokenizedInput.addAll(Lists.newArrayList("", "", "", ""));
-        if (commandConsumerMap.containsKey(tokenizedInput.get(0))) {
+        if (commandConsumerMap.containsKey(tokenizedInput.get(0)) && !tokenizedInput.get(1).isEmpty()) {
             commandConsumerMap.get(tokenizedInput.get(0)).accept(tokenizedInput);
         }
     }
@@ -93,11 +95,15 @@ public class Application {
     }
 
     private Consumer<List<String>> buildAddConsumerCommand() {
-        return (List<String> input) -> {
-            if (!input.get(1).isEmpty()) {
-                accountService.createAccount(input.get(1), input.get(2), input.get(3));
-            }
-        };
+        return (List<String> input) -> accountService.createAccount(input.get(1), input.get(2), input.get(3));
+    }
+
+    private Consumer<List<String>> buildChargeCommand() {
+        return (List<String> input) -> accountService.chargeAccount(input.get(1), input.get(2));
+    }
+
+    private Consumer<List<String>> buildCreditCommand() {
+        return (List<String> input) -> accountService.creditAccount(input.get(1), input.get(2));
     }
 
     private List<Message> buildSortedAccountAndErrorMessages() {
