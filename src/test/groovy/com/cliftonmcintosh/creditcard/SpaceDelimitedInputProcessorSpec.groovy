@@ -9,11 +9,11 @@ import spock.lang.Specification
  */
 class SpaceDelimitedInputProcessorSpec extends Specification {
 
-    private SpaceDelimitedInputProcessor process = new SpaceDelimitedInputProcessor()
+    private SpaceDelimitedInputProcessor processor = new SpaceDelimitedInputProcessor()
 
     def 'processRawInput should convert a space-delimited string into a List without any surround whitespaces and without any null or empty elements'() {
         when:
-        List<String> output = process.processRawInput(input)
+        List<String> output = processor.processRawInput(input)
 
         then:
         output != null

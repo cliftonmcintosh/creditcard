@@ -39,7 +39,11 @@ public class CreditCardAccountValidationService implements AccountValidationServ
     private static Predicate<String> ACCOUNT_NUMBER_CHECK = (String input) -> ACCOUNT_NUMBER_LENGTH_CHECK.and(IS_DIGITS_CHECK).and(LuhnTest.INSTANCE::test).test(input);
 
     private static Predicate<String> LIMIT_CHECK = (String input) -> {
-        Matcher matcher = LIMIT_FORMAT_PATTERN.matcher(input);
-        return matcher.matches();
+        boolean valid = input != null && !input.isEmpty();
+        if (valid) {
+            Matcher matcher = LIMIT_FORMAT_PATTERN.matcher(input);
+            valid = matcher.matches();
+        }
+        return valid;
     };
 }
