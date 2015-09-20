@@ -14,6 +14,11 @@ import com.cliftonmcintosh.creditcard.validation.CreditCardAccountValidationServ
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -28,12 +33,14 @@ public class Application {
 
 
     public static void main(String[] args) {
+        final String batchFileName = (args.length > 0) ? args[0] : null;
+
         AccountValidationService validationService = new CreditCardAccountValidationService();
         ErrorService errorService = new AccountErrorService();
         AccountService accountService = new CreditCardAccountService(validationService, errorService);
         InputProcessor inputProcessor = new SpaceDelimitedInputProcessor();
         Application application = new Application(accountService, inputProcessor, errorService);
-        application.run(args);
+        application.run(batchFileName);
     }
 
     public Application(AccountService accountService, InputProcessor inputProcessor, ErrorService errorService) {
@@ -44,26 +51,45 @@ public class Application {
         commandConsumerMap.put("Add", buildAddConsumerCommand());
     }
 
-    public void run(String... args) {
+    public void run(String batchFileName) {
         System.out.println("Welcome to the Credit Card Processing Application");
+
+        if (batchFileName != null) {
+            Path batchFile = Paths.get(batchFileName);
+            try {
+                List<String> commands = Files.readAllLines(batchFile, StandardCharsets.UTF_8);
+                commands.forEach(this::processCommand);
+                reportAccountsAndErrors();
+            } catch (IOException e) {
+                System.out.println(String.format("Check the file name input. Invalid file at %s", batchFileName));
+            }
+        }
+
         boolean more = true;
         while (more) {
             System.out.print("Enter a command: ");
             Scanner scanner = new Scanner(System.in);
             String input = scanner.nextLine();
-            List<String> tokenizedInput = Lists.newArrayList(inputProcessor.processRawInput(input));
-            tokenizedInput.addAll(Lists.newArrayList("", "", "", ""));
-            if (commandConsumerMap.containsKey(tokenizedInput.get(0))) {
-                commandConsumerMap.get(tokenizedInput.get(0)).accept(tokenizedInput);
-            }
-            final List<Message> messages = buildSortedAccountAndErrorMessages();
-
-            messages.forEach(message -> System.out.println(String.format("%s: %s", message.getHeader(), message.getDetails())));
-            System.out.println("--------------------\n");
-
+            processCommand(input);
+            reportAccountsAndErrors();
             more = !"exit".equalsIgnoreCase(input);
         }
 
+    }
+
+    private void processCommand(String input) {
+        List<String> tokenizedInput = Lists.newArrayList(inputProcessor.processRawInput(input));
+        tokenizedInput.addAll(Lists.newArrayList("", "", "", ""));
+        if (commandConsumerMap.containsKey(tokenizedInput.get(0))) {
+            commandConsumerMap.get(tokenizedInput.get(0)).accept(tokenizedInput);
+        }
+    }
+
+    private void reportAccountsAndErrors() {
+        final List<Message> messages = buildSortedAccountAndErrorMessages();
+
+        messages.forEach(message -> System.out.println(String.format("%s: %s", message.getHeader(), message.getDetails())));
+        System.out.println("--------------------\n");
     }
 
     private Consumer<List<String>> buildAddConsumerCommand() {
